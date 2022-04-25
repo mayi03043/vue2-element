@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getTokenRequest } from "@/request/loginRequest";
+import { getTokenRequest } from "@/request/auth/loginRequest";
 
 export default {
   // 组件名
@@ -75,8 +75,11 @@ export default {
   //组件方法
   methods: {
 
-    loginClick() {
-
+    /**
+     *  登入操作
+     */
+    login(data) {
+     
       // 打开加载器
       const loading = this.$loading({
           lock: true,
@@ -93,8 +96,8 @@ export default {
             type: "success",
           });
 
-          // 保存token
-          this.$store.commit('setToken',res);
+          // 保存token  
+          this.$store.commit('setToken',res.access_token);
           
           // 跳转到后台
           this.$router.push('/admin');
@@ -112,7 +115,20 @@ export default {
         });
     },
 
-    // 重置表单
+    /**
+     *   登入按钮
+     */
+    loginClick(){
+      this.$refs.form.validate(val=>{
+        if(val){
+          this.login(this.form);
+        }
+      })
+    },
+
+    /**
+     *   重置按钮
+     */
     resetClick(){
       this.$refs.form.resetFields();
     }
@@ -124,8 +140,8 @@ export default {
 
 <style scoped>
 .login {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
